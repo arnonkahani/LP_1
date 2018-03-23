@@ -4,15 +4,15 @@
 
 is_C_or_G('C').
 is_C_or_G('G').
-    
+
 % use counter to find how many instance of C and G.
 
-percentage(N, Word) :- 
-    percentage(N, 0, Word). 
+percentage(N, Word) :-
+    percentage(N, 0, Word).
 
 % list is empty or end case.
 
-percentage(N, A, []) :- 
+percentage(N, A, []) :-
     C is ceiling(N/2),
     F is floor(N/2),
     A >= F,
@@ -78,7 +78,7 @@ switch_w([],Ws,Ws).
 
 reverse_w([],Wr,Wr).
 
-reverse_w([H|T],Wr,Acc) :- 
+reverse_w([H|T],Wr,Acc) :-
     reverse_w(T,Wr,[H|Acc]).
 
 % Task 4
@@ -95,10 +95,69 @@ is_dna_process_1(N, M, [H|T]) :-
     is_dna_process_2(N,H,T),
     Mn is M - 1,
     is_dna(N, Mn,T).
-    
+
 is_dna(_,0,_).
 
 is_dna(N, M, Words) :-
     is_dna_process_1(N, M, Words).
+
+
+% Task 5
+
+
+
+
+dna_letter('A').
+
+dna_letter('C').
+
+dna_letter('G').
+
+dna_letter('T').
+
+dna_word(0,[]).
+
+dna_word(N, [H|T]):-
+    dna_letter(H),
+    Ns is N - 1,
+    Ns>=0,
+    dna_word(Ns,T).
+
+
+first_word(1,['A']).
+
+
+first_word(N,['A'|T]):-
+    Ns is N-1,
+    Ns > 0,
+    first_word(Ns,T).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
