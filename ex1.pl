@@ -1,3 +1,10 @@
+% utils
+
+check_p_for_all(_,_,_ ,[]).
+check_p_for_all(P,N,X,[Y|Ys]) :-
+   call(P, N,X, Y),
+   check_p_for_all(P,N, X, Ys).
+
 % Task 1
 
 % set rule for counting C and G.
@@ -83,22 +90,30 @@ reverse_w([H|T],Wr,Acc) :-
 
 % Task 4
 
-is_dna_process_2(_,_,[]).
 
-is_dna_process_2(N,C,[H|T]) :-
-    hamming(N,C,H),
-    reverse_complement(N,C,H),
-    is_dna_process_2(N,C,T).
+is_dna(_,_,[],[],_). 
 
-is_dna_process_1(N, M, [H|T]) :-
-    percentage(N,H),
-    is_dna_process_2(N,H,T),
-    Mn is M - 1,
-    is_dna(N, Mn,T).
-    
-is_dna(_,0,_).
+is_dna(N, M, [A|_],[_|Bs]) :-
+    percentage(N,A),
+    check_p_for_all(hamming,N,A,Bs),
+    check_p_for_all(reverse_complement,N,A,Bs),
+    is_dna(N, M, Bs,Bs,0).
+
+
+is_dna(N, _, [A|_],[_|_]) :-
+    \+ percentage(N,A),
+    is_dna(N, 0, [],[],1).
+
+is_dna(N, _, [A|_],[_|Bs]) :-
+    \+ check_p_for_all(hamming,N,A,Bs),
+    is_dna(N, 0, [],[],1).
+
+is_dna(N, _, [A|_],[_|Bs]) :-
+    \+ check_p_for_all(reverse_complement,N,A,Bs),
+    is_dna(N, 0, [],[],1).
 
 is_dna(N, M, Words) :-
-    is_dna_process_1(N, M, Words).
+    is_dna(N, M, Words,Words,R),
+    R == 1.
 
 
