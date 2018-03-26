@@ -31,6 +31,8 @@ is_dna_length(N,L) :-
 
 is_C_or_G('C').
 is_C_or_G('G').
+is_A_or_T('T').
+is_A_or_T('A').
     
 % use counter to find how many instance of C and G.
 
@@ -56,7 +58,7 @@ percentage(N, C, [H|T]) :-
 % is not a C or G charcter.
 
 percentage(N, C, [H|T]) :-
-    \+ is_C_or_G(H),
+    is_A_or_T(H),
     percentage(N, C, T).
 
 % Task 2
