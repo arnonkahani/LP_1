@@ -128,8 +128,25 @@ is_dna(N, M, [A|As],C) :-
     Cn is C + 1,
     is_dna(N, M, As,Cn).
 
+% Task 8
 
+dna_word(N, [H|T]):-
+    dna_letter(H),
+    Ns is N - 1,
+    Ns>=0,
+    dna_word(Ns,T).
 
+dna_word_list(_,0,[]).
+
+dna_word_list(N,M, [H|T]):-
+    dna_word(N,H),
+    Ms is M - 1,
+    Ms>=0,
+    dna_word_list(N,Ms,T).
+
+dna(N, M, Words) :-
+    dna_word_list(N,M,Words),
+    is_dna(N,M,Words).
 
 
 
