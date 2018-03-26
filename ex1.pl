@@ -179,9 +179,14 @@ list_from_num(N,Rn,Word):-
     dec_to_quat(N,Rn,Num_List),
     num_to_word(Num_List,Word).
 
+select(H,[H|T],T).
+select(X,[H|T],[H|T1]) :- select(X,T,T1).
+
+
 delMember(_, [], []) :- !.
 delMember(X, [X|Xs], Y) :- !, delMember(X, Xs, Y).
 delMember(X, [T|Xs], Y) :- !, delMember(X, Xs, Y2), append([T], Y2, Y).
+
 
 select_elem(0,[H|_],H).
 
@@ -235,6 +240,8 @@ random_dna_word(N,Word,List):-
 % Task 7
 
 % Task 8
+
+dna(N,M,Words).
 
 % Task 9
 
