@@ -1,10 +1,30 @@
 % utils
-
-check_p_for_all(_,_,_ ,[]).
 check_p_for_all(P,N,X,[Y|Ys]) :-
    call(P, N,X, Y),
    check_p_for_all(P,N, X, Ys).
 
+check_p_for_all(_,_,_ ,[]).
+
+is_DNA_charchter('C').
+is_DNA_charchter('A').
+is_DNA_charchter('T').
+is_DNA_charchter('G').
+
+dna_length(Xs,L) :- dna_length(Xs,0,L).
+
+dna_length([],L,L).
+
+dna_length([_|Xs],T,L) :-
+    T1 is T+1,
+    dna_length(Xs,T1,L).
+
+all_dna([]).
+all_dna([H|T]) :- is_DNA_charchter(H),all_dna(T). 
+
+is_dna_length(N,L) :-
+    all_dna(L),
+    dna_length(L,M),
+    M == N.
 % Task 1
 
 % set rule for counting C and G.
@@ -14,7 +34,8 @@ is_C_or_G('G').
     
 % use counter to find how many instance of C and G.
 
-percentage(N, Word) :- 
+percentage(N, Word) :-
+    is_dna_length(N,Word),
     percentage(N, 0, Word). 
 
 % list is empty or end case.
@@ -44,17 +65,20 @@ percentage(N, C, [H|T]) :-
 hamming(N, Word1, Word2) :-
     hamming(N,Word1,Word2,0).
 
+hamming(N,[], [],C) :-
+    F is floor(N/2),
+    C >= F.
+
 hamming(N,[A|As],[B|Bs],C) :-
+    is_DNA_charchter(A),
+    is_DNA_charchter(B),
     A \== B,
     C1 is C + 1,
     hamming(N,As,Bs,C1).
 
-hamming(N,[_|T1],[_|T2],C) :-
+hamming(N,[A|T1],[B|T2],C) :-
+    A == B,
     hamming(N,T1,T2,C).
-
-hamming(N,[], [],C) :-
-    F is floor(N/2),
-    C >= F.
 
 % Task 3
 reverse_complement(N, Word1, Word2) :-
@@ -91,29 +115,22 @@ reverse_w([H|T],Wr,Acc) :-
 % Task 4
 
 
-is_dna(_,_,[],[],_). 
-
-is_dna(N, M, [A|_],[_|Bs]) :-
-    percentage(N,A),
-    check_p_for_all(hamming,N,A,Bs),
-    check_p_for_all(reverse_complement,N,A,Bs),
-    is_dna(N, M, Bs,Bs,0).
-
-
-is_dna(N, _, [A|_],[_|_]) :-
-    \+ percentage(N,A),
-    is_dna(N, 0, [],[],1).
-
-is_dna(N, _, [A|_],[_|Bs]) :-
-    \+ check_p_for_all(hamming,N,A,Bs),
-    is_dna(N, 0, [],[],1).
-
-is_dna(N, _, [A|_],[_|Bs]) :-
-    \+ check_p_for_all(reverse_complement,N,A,Bs),
-    is_dna(N, 0, [],[],1).
-
 is_dna(N, M, Words) :-
-    is_dna(N, M, Words,Words,R),
-    R == 1.
+    is_dna(N, M, Words,0).
+
+is_dna(_, M,[],C) :-
+    C == M.
+
+is_dna(N, M, [A|As],C) :-
+    percentage(N,A),
+    check_p_for_all(hamming,N,A,As),
+    check_p_for_all(reverse_complement,N,A,As),
+    Cn is C + 1,
+    is_dna(N, M, As,Cn).
+
+
+
+
+
 
 
