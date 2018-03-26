@@ -105,8 +105,6 @@ is_dna(N, M, Words) :-
 % Task 5
 
 
-
-
 dna_letter('A').
 
 dna_letter('C').
@@ -123,17 +121,124 @@ dna_word(N, [H|T]):-
     Ns>=0,
     dna_word(Ns,T).
 
+% Task 6
 
-first_word(1,['A']).
+pow1(_,0,1).
+
+pow1(X,Y,Z) :- Y1 is Y - 1,
+              pow1(X,Y1,Z1), Z is Z1*X.
+
+num_letter(0,'A').
+
+num_letter(1,'C').
+
+num_letter(2,'G').
+
+num_letter(3,'T').
+
+num_to_word([],[]).
 
 
-first_word(N,['A'|T]):-
+num_to_word([Hn|Tn], [Hl|Tl]):-
+    num_letter(Hn,Hl),
+    num_to_word(Tn,Tl).
+
+zero_list(0,[]).
+
+zero_list(N,[0|Rest]):-
+    N>0,
+    Ns is N -1,
+    zero_list(Ns, Rest).
+
+
+dec_to_quat(0,[]).
+
+dec_to_quat(Rn,List):-
+    Num is mod(Rn,4),
+    Rn>0,
+    Re is div(Rn,4),
+    dec_to_quat(Re,List2),
+    append(List2,[Num],List).
+
+dec_to_quat(N,R,List):-
+    dec_to_quat(R,Word),
+    length(Word,Wl),
+    Zero_num is N-Wl,
+    Zero_num == 0,
+    dec_to_quat(R, List).
+
+dec_to_quat(N,R,List):-
+    dec_to_quat(R,Word),
+    length(Word,Wl),
+    Zero_num is N-Wl,
+    Zero_num > 0,
+    zero_list(Zero_num, Zl),
+    append(Zl,Word,List).
+
+list_from_num(N,Rn,Word):-
+    dec_to_quat(N,Rn,Num_List),
+    num_to_word(Num_List,Word).
+
+delMember(_, [], []) :- !.
+delMember(X, [X|Xs], Y) :- !, delMember(X, Xs, Y).
+delMember(X, [T|Xs], Y) :- !, delMember(X, Xs, Y2), append([T], Y2, Y).
+
+select_elem(0,[H|_],H).
+
+select_elem(N,[_|T],H):-
+    N>0,
     Ns is N-1,
-    Ns > 0,
-    first_word(Ns,T).
+    select_elem(Ns,T,H).
+
+n_list(N, L):-
+  findall(Num, between(0, N, Num), L).
+
+mix_list(N,[],[N]).
+
+mix_list(N,L1,[N|Mix_L1]):-
+    length(L1,Length),
+    Length >0,
+    Len is Length -1,
+    random_between(0,Len,R),
+    select_elem(R,L1,Re),
+    delMember(N,L1,L2),
+    mix_list(Re,L2,Mix_L1).
 
 
+no_rep_list([],[]).
 
+no_rep_list([H1|T1],T2):-
+    member(H1,T1),
+    no_rep_list(T1,T2).
+
+
+no_rep_list([H1|T1],[H1|T2]):-
+    \+member(H1,T1),
+    no_rep_list(T1,T2).
+
+
+make_random_list(N,R,List):-
+    n_list(N,N_list),
+    mix_list(R,N_list,TList),
+    no_rep_list(TList,List).
+
+random_dna_word(N,Word):-
+   pow(4,N,Ns),
+   random_between(0,N,R),
+   make_random_list(Ns,R,List),
+   random_dna_word(N,Word,List).
+
+random_dna_word(N,Word,List):-
+   select(Ra,List,_),
+   list_from_num(N,Ra,Word).
+
+% Task 7
+
+% Task 8
+
+% Task 9
+
+% Task 10
 
 
 
