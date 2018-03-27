@@ -130,6 +130,13 @@ is_dna(N, M, [A|As],C) :-
     Cn is C + 1,
     is_dna(N, M, As,Cn).
 
+% Task 7
+
+increment(Words, Word, N) :-
+    append([Word],Words,Wc),
+    dna_length(Wc,L),
+    is_dna(N,L,Wc).
+
 % Task 8
 
 dna_word(N, [H|T]):-
