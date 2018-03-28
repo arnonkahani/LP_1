@@ -189,6 +189,9 @@ select_elem(N,[_|T],H):-
 
 mix_list(N,[N],[N]).
 
+% in every iteration deleting the previese chosen word from L1 and
+% chose a random place R of the next random number,
+% select_elem will return the actual number (Re) in the list.
 mix_list(N,L1,[N|Mix_L1]):-
     delMember(N,L1,L2),
     length(L2,Length),
@@ -203,16 +206,22 @@ make_random_list(N,R,List):-
     numlist(0,N,N_list),
     mix_list(R,N_list,List).
 
+random_dna_word(N,Word,List):-
+   select(Ra,List,_),
+   list_from_num(N,Ra,Word).
+
+% first calculates 4^N(the number of words), after choosing a random
+% number, make_random_list will make a random list of all the numbers
+% from 0 to 4^N - 1, this list will be the input to random_dna_word that
+% take a list of number(in decimle) and chooses the first element of the
+% list(returns false if the list is empty) and return the dna
+% representation of the first element of list.
 random_dna_word(N,Word):-
    pow(4,N,Ns),
    Nss is Ns-1,
    random_between(0,Nss,R),
    make_random_list(Ns,R,List),
    random_dna_word(N,Word,List).
-
-random_dna_word(N,Word,List):-
-   select(Ra,List,_),
-   list_from_num(N,Ra,Word).
 
 % Task 7
 
@@ -233,6 +242,20 @@ dna(N, M, Words) :-
 
 
 % Task 9
+
+
+random_dna_word_list(_,0,[]).
+
+random_dna_word_list(N,M, [H|T]):-
+    Ms is M - 1,
+    Ms>=0,
+    random_dna_word_list(N,Ms,T),
+    random_dna_word(N,H).
+
+random_dna(N, M, Words) :-
+    random_dna_word_list(N,M,Words),
+    is_dna(N,M,Words).
+
 
 % Task 10
 
