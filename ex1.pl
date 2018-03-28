@@ -174,9 +174,11 @@ list_from_num(N,Rn,Word):-
     dec_to_quat(N,Rn,Num_List),
     num_to_word(Num_List,Word).
 
-delMember(_, [], []) :- !.
-delMember(X, [X|Xs], Y) :- !, delMember(X, Xs, Y).
-delMember(X, [T|Xs], Y) :- !, delMember(X, Xs, Y2), append([T], Y2, Y).
+delMember(_, [], []).
+delMember(X, [X|Xs], Y) :-  delMember(X, Xs, Y).
+delMember(X, [T|Xs], [T|Y]) :-
+    T\==X,
+    delMember(X, Xs, Y).
 
 select_elem(0,[H|_],H).
 
